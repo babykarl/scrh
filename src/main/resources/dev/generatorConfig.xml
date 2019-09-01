@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+	<context id="defaultContext" targetRuntime="MyBatis3Simple">
+		<!-- 生成的Java文件的编码 -->  
+        <property name="javaFileEncoding" value="UTF-8"/>
+        
+        <!-- 格式化java代码 -->  
+        <property name="javaFormatter" value="org.mybatis.generator.api.dom.DefaultJavaFormatter"/>  
+		
+		<!-- 生成额外文件的插件配置 -->
+		<!-- <plugin type="com.fmsh.tools.mbg.plugin.TableRelatedFileGenerator">
+			指定自定义的模板文件的位置
+			<property name="templatePath" value="/src/main/resources" />
+			指定测试类基类的包名
+			<property name="VAR>BaseTestPackageRoute" value="cn.com.fmsh.nfcos.candy.tsm.BaseTest" />
+			指定DAO文件的生成包
+			<property name="dao.java" value="/src/main/java/cn/com/fmsh/nfcos/candy/tsm/dao" />
+			<property name="daoTest.java" value="/src/test/java/cn/com/fmsh/nfcos/candy/tsm/dao" />
+			指定Service文件的生成包
+			<property name="service.java" value="/src/main/java/cn/com/fmsh/nfcos/candy/tsm/service" />
+			<property name="serviceTest.java" value="/src/test/java/cn/com/fmsh/nfcos/candy/tsm/service" />
+			指定Controller文件的生成包
+			<property name="controller.java" value="/src/main/java/cn/com/fmsh/nfcos/candy/tsm/controller" />
+			<property name="controllerTest.java" value="/src/test/java/cn/com/fmsh/nfcos/candy/tsm/controller" />
+		</plugin> -->
+		
+		<!-- 为Mapper接口添加@Mapper注解的插件配置 -->
+		<plugin type="org.mybatis.generator.plugins.MapperAnnotationPlugin"></plugin>
+		
+		<!-- 自定义注释生成器配置 -->
+		<commentGenerator type="com.fmsh.tools.mbg.api.CustomizedCommentGenerator">
+			<property name="suppressDate" value="true" />
+			<property name="suppressAllComments" value="false" />
+			<property name="addRemarkComments" value="true" />
+		</commentGenerator>
+		
+		<jdbcConnection connectionURL="jdbc:mysql://rm-2zeq0pq3t8582a5h47o.mysql.rds.aliyuncs.com"
+            driverClass="com.mysql.jdbc.Driver" password="31sue23ICPx3"
+            userId="authcodetest">
+            <!-- 设置可以获取tables remarks信息(用于MySQL数据库) -->
+            <property name="useInformationSchema" value="true" />
+            <!-- 设置可以获取remarks信息(用于Oracle数据库) -->
+            <property name="remarksReporting" value="true" />
+        </jdbcConnection>
+		
+		<!-- 指定数据库表对应的实体类的生成位置 -->
+		<javaModelGenerator targetPackage="cn.com.fmsh.uivs3.uivs_console_server.model.db"
+			targetProject="src/main/java" />
+			
+		<!-- 指定数据库表对应的Mapper接口的生成位置 -->
+		<javaClientGenerator
+			targetPackage="cn.com.fmsh.uivs3.uivs_console_server.mapper"
+			targetProject="src/main/java" type="ANNOTATEDMAPPER" 
+			/>
+
+		<!-- 指定需要进行代码生成的相关数据库表 -->
+		<table schema="" tableName="uivs_auth_record"
+			domainObjectName="AuthRecord">
+			<!-- 指明生成构造函数 -->
+			<property name="constructorBased" value="false" />
+		</table>
+		
+	</context>
+</generatorConfiguration>

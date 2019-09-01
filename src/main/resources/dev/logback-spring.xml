@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+	<include resource="org/springframework/boot/logging/logback/defaults.xml" />
+	​
+	<springProperty scope="context" name="springAppName"
+		source="spring.application.name" />
+	<property name="LOG_FILE" value="logs/${springAppName}" />
+	<springProperty scope="context" name="isShowSensitiveData"
+		source="fmsh.log.isShowSensitiveData" />
+	<conversionRule conversionWord="msg"
+		converterClass="com.fmsh.framework.commons.log.SensitiveDataConverter">
+	</conversionRule>
+	​
+	<property name="CONSOLE_LOG_PATTERN"
+		value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n" />
+
+	<!-- Appender to log to console -->
+	<appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<!-- Minimum logging level to be presented in the console logs -->
+			<level>DEBUG</level>
+		</filter>
+		<encoder>
+			<pattern>${CONSOLE_LOG_PATTERN}</pattern>
+			<charset>utf8</charset>
+		</encoder>
+	</appender>
+
+	<!-- Appender to log to file -->
+	<appender name="flatfile"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<rollingPolicy
+			class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+			<fileNamePattern>${LOG_FILE}-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+			<!-- 设置保存天数 -->
+			<maxHistory>93</maxHistory>
+			<!-- 设置每个日志文件大小 -->
+			<maxFileSize>100MB</maxFileSize>
+			<!-- 设置总日志文件大小 -->
+			<totalSizeCap>100GB</totalSizeCap>
+		</rollingPolicy>
+		<encoder
+			class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+			<providers>
+				<timestamp>
+					<timeZone></timeZone>
+				</timestamp>
+				<pattern>
+					<pattern>
+						{
+						"severity": "%level",
+						"service": "${springAppName:-}",
+						"trace": "%X{X-B3-TraceId:-}",
+						"span": "%X{X-B3-SpanId:-}",
+						"parent": "%X{X-B3-ParentSpanId:-}",
+						"exportable":"%X{X-Span-Export:-}",
+						"pid": "${PID:-}",
+						"thread":"%thread",
+						"class": "%logger{40}",
+						"rest": "%msg",
+						"throwable":"%throwable"
+						}
+					</pattern>
+				</pattern>
+			</providers>
+		</encoder>
+	</appender>
+
+	<!-- 过滤底层框架输出的日志 -->
+	<logger name="cn.com.fmsh.uivs3" level="debug" additivity="false">
+		<appender-ref ref="flatfile" />
+		<appender-ref ref="console" />
+	</logger>
+
+	<root level="INFO">
+		<appender-ref ref="console" />
+		<appender-ref ref="flatfile" />
+	</root>
+</configuration>
